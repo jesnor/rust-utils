@@ -1,3 +1,5 @@
+use std::rc::strong_count;
+use std::rc::weak_count;
 use std::rc::{Rc, Weak};
 use std::cell::{RefCell, RefMut};
 use std::hash::{Hash, Hasher};
@@ -27,6 +29,14 @@ impl<T> RcCell<T> {
 	pub fn get<'a>(&'a self) -> RefMut<'a, T> {
 		self.value.borrow_mut()
 	}
+	
+	pub fn strong_count(&self) -> usize {
+		strong_count(&self.value)
+	}
+	
+	pub fn weak_count(&self) -> usize {
+		weak_count(&self.value)
+	}
 }
 
 impl<T> Clone for RcCell<T> {
@@ -39,7 +49,7 @@ impl<T> Deref for RcCell<T> {
 	type Target = RefCell<T>;
 	
 	fn deref(&self) -> &RefCell<T> {
-  	self.value.deref()
+		self.value.deref()
 	}
 }
 
